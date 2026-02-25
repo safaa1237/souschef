@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { LlmModule } from './llm/llm.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { LlmModule } from './llm/llm.module.js';
 
 @Module({
-  imports: [    
+  imports: [
     ConfigModule.forRoot({
-    isGlobal: true,
-  }),
-      LlmModule,
-],
+      isGlobal: true,
+    }),
+    LlmModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

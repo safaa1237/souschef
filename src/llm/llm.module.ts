@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { LlmService } from './llm.service';
-import { LlmController } from './llm.controller';
-
+import { LlmService } from './llm.service.js';
+import { LlmController } from './llm.controller.js';
 
 @Module({
   imports: [ConfigModule],

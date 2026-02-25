@@ -4,7 +4,6 @@ import * as bcrypt from 'bcrypt';
 
 @Schema({ timestamps: true })
 export class User extends Document {
-
   @Prop({ required: true, unique: true })
   email: string;
 
