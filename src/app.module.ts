@@ -7,6 +7,7 @@ import { LlmModule } from './llm/llm.module.js';
 import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { PantryModule } from './pantry/pantry.module.js';
+import { RecipeModule } from './recipe/recipe.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PantryModule } from './pantry/pantry.module.js';
     AuthModule,
     UsersModule,
     PantryModule,
+    RecipeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
