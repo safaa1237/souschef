@@ -15,7 +15,7 @@ export class PantryItemResponseDto {
 export class PantryController {
   constructor(private readonly pantryService: PantryService) {}
 
-  @Post('/item')
+  @Post()
   async addItem(@Req() req, @Body() pantryItem: PantryItem): Promise<PantryItem[]> {
     console.log(pantryItem);
     return await this.pantryService.addItem(req.user.userId, pantryItem);

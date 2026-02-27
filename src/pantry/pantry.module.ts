@@ -8,5 +8,6 @@ import { PantryController } from './pantry.controller.js';
   imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
   providers: [PantryService],
   controllers: [PantryController],
+  exports: [PantryService],
 })
 export class PantryModule {}

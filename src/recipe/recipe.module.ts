@@ -6,12 +6,7 @@ import { Recipe, RecipeSchema } from './recipe.schema.js';
 import { User, UserSchema } from '../users/user.schema.js';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Recipe.name, schema: RecipeSchema },
-      { name: User.name, schema: UserSchema },
-    ]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: Recipe.name, schema: RecipeSchema }])],
   providers: [RecipeService],
   controllers: [RecipeController],
   exports: [RecipeService],
