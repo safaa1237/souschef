@@ -4,26 +4,32 @@ on:
   push:
     branches: [main]
     paths:
-      - 'backend/**'
-      - '.github/workflows/backend-ci.yml'
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
   pull_request:
     branches: [main]
     paths:
-      - 'backend/**'
-      - '.github/workflows/backend-ci.yml'
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      ECR_REPO: 329631044945.dkr.ecr.us-east-1.amazonaws.com/sous-chef-ai-dev-backend
+      AWS_REGION: ${{ secrets.AWS_REGION }}
 
     defaults:
       run:
         working-directory: backend
 
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Node
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,11 +37,38 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
+      # 3. Install deps
       - name: Install dependencies
         run: npm ci
 
+      # 4. Build app
       - name: Build NestJS app
         run: npm run build
 
+      # 🚨 Only run steps below on push to main (not PR)
+      - name: Configure AWS credentials
+        if: github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        if: github.event_name == 'push'
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 5. Build Docker image with tags
       - name: Build Docker image
-        run: docker build -t sous-chef-ai-backend .
+        if: github.event_name == 'push'
+        run: |
+          docker build \
+            -t $ECR_REPO:latest \
+            -t $ECR_REPO:${{ github.sha }} .
+
+      # 6. Push image
+      - name: Push Docker image
+        if: github.event_name == 'push'
+        run: |
+          docker push $ECR_REPO:latest
+          docker push $ECR_REPO:${{ github.sha }}
